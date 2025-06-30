@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liverpool Fan Club Noida</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <h1 class="logo"> Liverpool FC Noida</h1>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#trophies">Trophies</a></li>
+        <li><a href="#join">Join Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero container">
+    <div class="hero-text">
+      <h1>You'll Never Walk Alone</h1>
+      <p>Welcome to the Official Liverpool FC Fan Club in Noida! Join match screenings, debates, and more.</p>
+      <a href="#join" class="btn">Become a Member</a>
+    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" alt="LFC logo" class="hero-img">
+  </section>
+
+  <section id="about" class="about container">
+    <h2>About Us</h2>
+    <p >
+      We are passionate Liverpool FC fans based in Noida, hosting regular meetups, match screenings, and discussion
+      forums. Whether you're a die-hard Kopite or new to football, you’re welcome here anytime. Join us to celebrate the
+      rich history and culture of Liverpool FC, share your love for the club, and connect with fellow fans in the Noida
+      area. We organize events, debates, and screenings to keep the spirit of Anfield alive in our community. YNWA!
+    </p>
+  </section>
+
+  <section id="events" class="events container">
+    <h2>Upcoming Events</h2>
+    <ul>
+      <li><strong>📺 Match Screening:</strong> LFC vs Manchester United – July 5, 2025 at 6:30 PM</li>
+      <li><strong>⚽ Football Debate:</strong> "Best Klopp XI" – July 12, 2025</li>
+      <li><strong>📍 Location:</strong> Sector 18, Noida – The Football House Café</li>
+    </ul>
+  </section>
+
+  <section id="trophies" class="trophies container">
+    <h2>Our Legacy</h2>
+    <div class="trophy-grid">
+      <div class="trophy-card">
+        <i class="fas fa-trophy fa-3x"></i>
+        <h3 class="count" data-target="20">0</h3>
+        <p>English League Titles</p>
+      </div>
+      <div class="trophy-card">
+        <i class="fas fa-trophy fa-3x"></i>
+        <h3 class="count" data-target="6">0</h3>
+        <p>Champions League</p>
+      </div>
+      <div class="trophy-card">
+        <i class="fas fa-trophy fa-3x"></i>
+        <h3 class="count" data-target="8">0</h3>
+        <p>FA Cups</p>
+      </div>
+      <div class="trophy-card">
+        <i class="fas fa-trophy fa-3x"></i>
+        <h3 class="count" data-target="9">0</h3>
+        <p>League Cups</p>
+      </div>
+      <div class="trophy-card">
+        <i class="fas fa-shield-alt fa-3x"></i>
+        <h3 class="count" data-target="4">0</h3>
+        <p>UEFA Super Cups</p>
+      </div>
+      <div class="trophy-card">
+        <i class="fas fa-globe-europe fa-3x"></i>
+        <h3 class="count" data-target="1">0</h3>
+        <p>FIFA Club World Cup</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="join" class="join container">
+    <h2>Join the Club</h2>
+    <p>Fill out the form below to become part of our growing community!</p>
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <button type="submit" class="btn">Join Now</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Liverpool Fan Club Noida</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const counters = document.querySelectorAll('.count');
+    const speed = 200;
+
+    counters.forEach(counter => {
+      const updateCount = () => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+        const increment = Math.ceil(target / speed);
+
+        if (count < target) {
+          counter.innerText = count + increment;
+          setTimeout(updateCount, 30);
+        } else {
+          counter.innerText = target;
+        }
+      };
+      updateCount();
+    });
+  </script>
+</body>
+
+</html>

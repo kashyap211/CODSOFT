@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --text: #ecf0f1;
+            --bg: #1a1a1a;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg), #2c3e50);
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 95%;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: calculatorEntry 0.5s ease-out;
+        }
+
+        @keyframes calculatorEntry {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .display {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .previous-operand {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            text-align: right;
+            height: 30px;
+        }
+
+        .current-operand {
+            color: white;
+            font-size: 2rem;
+            text-align: right;
+            height: 40px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        button:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .operator {
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        .equals {
+            background: rgba(46, 204, 113, 0.3);
+        }
+
+        .clear, .delete {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .function {
+            background: rgba(155, 89, 182, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 15px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <div class="previous-operand"></div>
+            <div class="current-operand">0</div>
+        </div>
+        <div class="buttons">
+            <button class="function" onclick="handleFunction('sin')">sin</button>
+            <button class="function" onclick="handleFunction('cos')">cos</button>
+            <button class="function" onclick="handleFunction('tan')">tan</button>
+            <button class="function" onclick="handleFunction('log')">log</button>
+            <button class="function" onclick="handleFunction('ln')">ln</button>
+
+            <button class="function" onclick="handleFunction('sqrt')">√</button>
+            <button class="function" onclick="handleFunction('square')">x²</button>
+            <button class="function" onclick="handleFunction('cube')">x³</button>
+            <button class="function" onclick="handleFunction('pi')">π</button>
+            <button class="function" onclick="handleFunction('e')">e</button>
+
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">) </button>
+            <button class="delete" onclick="backspace()">⌫</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+            <button class="function" onclick="handleFunction('pow')">^</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            <button class="function" onclick="handleFunction('fact')">n!</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            <button class="equals" onclick="calculate()">=</button>
+
+            <button onclick="toggleSign()">±</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="function" onclick="handleFunction('exp')">EXP</button>
+            <button class="function" onclick="handleFunction('rad')">RAD</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.querySelector('.current-operand');
+        const previousDisplay = document.querySelector('.previous-operand');
+        let isRadians = true;
+
+        function appendToDisplay(value) {
+            if (display.textContent === '0' && value !== '.') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+            addClickAnimation(event.target);
+        }
+
+        function clearDisplay() {
+            display.textContent = '0';
+            previousDisplay.textContent = '';
+            addClickAnimation(event.target);
+        }
+
+        function backspace() {
+            display.textContent = display.textContent.slice(0, -1) || '0';
+            addClickAnimation(event.target);
+        }
+
+        function toggleSign() {
+            if (display.textContent.startsWith('-')) {
+                display.textContent = display.textContent.slice(1);
+            } else {
+                display.textContent = '-' + display.textContent;
+            }
+            addClickAnimation(event.target);
+        }
+
+        function handleFunction(func) {
+            const num = parseFloat(display.textContent);
+            let result;
+
+            switch(func) {
+                case 'sin':
+                    result = isRadians ? Math.sin(num) : Math.sin(num * Math.PI / 180);
+                    break;
+                case 'cos':
+                    result = isRadians ? Math.cos(num) : Math.cos(num * Math.PI / 180);
+                    break;
+                case 'tan':
+                    result = isRadians ? Math.tan(num) : Math.tan(num * Math.PI / 180);
+                    break;
+                case 'log':
+                    result = Math.log10(num);
+                    break;
+                case 'ln':
+                    result = Math.log(num);
+                    break;
+                case 'sqrt':
+                    result = Math.sqrt(num);
+                    break;
+                case 'square':
+                    result = num * num;
+                    break;
+                case 'cube':
+                    result = num * num * num;
+                    break;
+                case 'pi':
+                    result = Math.PI;
+                    break;
+                case 'e':
+                    result = Math.E;
+                    break;
+                case 'fact':
+                    result = factorial(num);
+                    break;
+                case 'exp':
+                    display.textContent += 'e';
+                    return;
+                case 'rad':
+                    isRadians = !isRadians;
+                    display.textContent = isRadians ? 'RAD' : 'DEG';
+                    setTimeout(() => display.textContent = '0', 1000);
+                    return;
+            }
+
+            previousDisplay.textContent = `${func}(${num})`;
+            display.textContent = formatResult(result);
+            addClickAnimation(event.target);
+        }
+
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0) return 1;
+            let result = 1;
+            for(let i = 2; i <= n; i++) result *= i;
+            return result;
+        }
+
+        function calculate() {
+            try {
+                previousDisplay.textContent = display.textContent;
+                display.textContent = formatResult(eval(display.textContent));
+            } catch (error) {
+                display.textContent = 'Error';
+                setTimeout(clearDisplay, 1000);
+            }
+            addClickAnimation(event.target);
+        }
+
+        function formatResult(number) {
+            if (isNaN(number)) return 'Error';
+            if (!isFinite(number)) return 'Infinity';
+            const precision = 10;
+            return Number(parseFloat(number).toPrecision(precision));
+        }
+
+        function addClickAnimation(button) {
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => button.style.transform = 'scale(1)', 100);
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            if ((key >= '0' && key <= '9') || key === '.' || key === '+' || key === '-' || key === '*' || key === '/' || key === '(' || key === ')') {
+                appendToDisplay(key);
+                const button = document.querySelector(`button[onclick="appendToDisplay('${key}')"]`);
+                if (button) addClickAnimation(button);
+            } else if (key === 'enter') {
+                calculate();
+                const button = document.querySelector('.equals');
+                if (button) addClickAnimation(button);
+            } else if (key === 'escape') {
+                clearDisplay();
+                const button = document.querySelector('.clear');
+                if (button) addClickAnimation(button);
+            } else if (key === 'backspace') {
+                backspace();
+                const button = document.querySelector('.delete');
+                if (button) addClickAnimation(button);
+            } else if (key === 's') {
+                handleFunction('sin');
+                const button = document.querySelector('button[onclick="handleFunction(\'sin\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'c') {
+                handleFunction('cos');
+                const button = document.querySelector('button[onclick="handleFunction(\'cos\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 't') {
+                handleFunction('tan');
+                const button = document.querySelector('button[onclick="handleFunction(\'tan\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'l') {
+                handleFunction('log');
+                const button = document.querySelector('button[onclick="handleFunction(\'log\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'n') {
+                handleFunction('ln');
+                const button = document.querySelector('button[onclick="handleFunction(\'ln\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'r') {
+                handleFunction('sqrt');
+                const button = document.querySelector('button[onclick="handleFunction(\'sqrt\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'p') {
+                handleFunction('pi');
+                const button = document.querySelector('button[onclick="handleFunction(\'pi\')"]');
+                if (button) addClickAnimation(button);
+            } else if (key === 'e') {
+                handleFunction('e');
+                const button = document.querySelector('button[onclick="handleFunction(\'e\')"]');
+                if (button) addClickAnimation(button);
+            }
+        });
+    </script>
+</body>
+</html>
